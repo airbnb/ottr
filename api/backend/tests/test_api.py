@@ -1,5 +1,3 @@
-import pytest
-import boto3
 from moto import (
     mock_dynamodb2,
     mock_route53,

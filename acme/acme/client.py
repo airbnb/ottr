@@ -29,9 +29,6 @@ LOGGER = get_logger(__name__)
 
 region_name = os.environ['AWS_REGION']
 dynamodb_table = os.environ['DYNAMODB_TABLE']
-dynamodb = boto3.resource('dynamodb', region_name=region_name)
-table = dynamodb.Table(dynamodb_table)
-
 
 def get_secret(path: str, element=None, region: str = 'us-east-1') -> str:
     session = boto3.session.Session()
@@ -56,10 +53,11 @@ def get_secret(path: str, element=None, region: str = 'us-east-1') -> str:
 
 
 def query_subject_alternative_names(hostname: str) -> List[str]:
+    dynamodb = boto3.resource('dynamodb', region_name=region_name)
+    table = dynamodb.Table(dynamodb_table)
     response = table.query(
         IndexName='system_name_index',
         KeyConditionExpression=Key('system_name').eq(hostname))
-
     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
         return response['Items'][0]['subject_alternative_name']
     else:
@@ -67,7 +65,9 @@ def query_subject_alternative_names(hostname: str) -> List[str]:
         sys.exit(1)
 
 
-def update_certificate_expiration(hostname: str, certificate_expiration: str) -> None:
+def update_certificate_expiration(hostname: str, certificate_expiration: str) -> dict:
+    dynamodb = boto3.resource('dynamodb', region_name=region_name)
+    table = dynamodb.Table(dynamodb_table)
     try:
         _ = datetime.fromisoformat(certificate_expiration)
         response = table.update_item(
@@ -79,15 +79,18 @@ def update_certificate_expiration(hostname: str, certificate_expiration: str) ->
                 ":certificate_expiration": certificate_expiration,
                 ":certificate_validation": "True"
             },
-            ReturnValues="UPDATED_NEW"
+            ReturnValues="ALL_NEW"
         )
         LOGGER.info(response)
+        return response
     except Exception as error:
         LOGGER.error(error)
         sys.exit(1)
 
 
 def _query_primary_key(system_name: str) -> dict:
+    dynamodb = boto3.resource('dynamodb', region_name=region_name)
+    table = dynamodb.Table(dynamodb_table)
     response = table.query(
         IndexName='system_name_index',
         KeyConditionExpression=Key('system_name').eq(system_name))

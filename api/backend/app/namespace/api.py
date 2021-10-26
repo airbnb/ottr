@@ -273,7 +273,7 @@ class UnsetCertificateValidation(Resource):
             if not query['Items']:
                 return {'Invalid Host': '{}'.format(system_name)}, 200
             else:
-                response = dynamodb_client.unset_certificate_validation(system_name=system_name, status='False')
+                response = dynamodb_client.set_certificate_validation(system_name=system_name, status='False')
                 if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                     return {f'Certificate Validation Unset': f'Certificate validation disabled for the next execution on {system_name}. Please ensure this endpoint was only executed if the current certification on {system_name} is either a self-signed or an invalid certificate.'}, 200
         else:
@@ -293,7 +293,7 @@ class SetCertificateValidation(Resource):
             if not query['Items']:
                 return {'Invalid Host': '{}'.format(system_name)}, 200
             else:
-                response = dynamodb_client.unset_certificate_validation(system_name=system_name, status='True')
+                response = dynamodb_client.set_certificate_validation(system_name=system_name, status='True')
                 if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                     return {f'Certificate Validation Enabled': f'Certificate validation enabled on {system_name}. Please ensure {system_name} does not currently have a self-signed or invalid certificate.'}, 200
         else:

@@ -30,10 +30,7 @@ CONF_ROUTE_FILE = os.path.join(
 class Device:
     """Asset Inventory Device Objects"""
 
-    def __init__(self, ip_address='None', system_name='None',
-                 host_platform='None', os_version='None', device_model='None',
-                 certificate_authority='None', data_center='None',
-                 subject_alternative_name=[], origin='None'):
+    def __init__(self, ip_address='None', system_name='None', host_platform='None', os_version='None', device_model='None', certificate_authority='None', data_center='None', subject_alternative_name=[], origin='None', common_name='None', validate_certificate='True') -> None:
         self.ip_address = ip_address
         self.certificate_authority = certificate_authority
         self.data_center = data_center
@@ -41,19 +38,16 @@ class Device:
         self.os_version = os_version
         self.system_name = system_name
         self.device_model = device_model
-        self.origin = origin
         self.subject_alternative_name = subject_alternative_name
+        self.origin = origin
+        self.common_name = common_name
+        self.validate_certificate = validate_certificate
 
         if len(self.subject_alternative_name) == 0:
             self.subject_alternative_name = [system_name]
 
     def __str__(self):
-        structure = "{{ip_address: {}, system_name: {}, host_platform: {}, \
-            os_version: {}, device_model: {}, certificate_authority: {}, \
-            data_center: {}, subject_alternative_name: {}, origin: {}}}".format(
-            self.ip_address, self.system_name, self.host_platform,
-            self.os_version, self.device_model, self.certificate_authority,
-            self.data_center, self.subject_alternative_name, self.origin)
+        structure = f"{{ip_address: {self.ip_address}, system_name: {self.system_name}, common_name: {self.common_name}, host_platform: {self.host_platform}, os_version: {self.os_version}, device_model: {self.device_model}, certificate_authority: {self.certificate_authority}, data_center: {self.data_center}, subject_alternative_name: {self.subject_alternative_name}, validate_certificate: {self.validate_certificate}}}"
         return structure
 
     @property
@@ -145,6 +139,34 @@ class Device:
         if domain not in self._valid_domains:
             raise DeviceValidationError(
                 f"{domain} Invalid. Valid Domains: {self._valid_domains}")
+
+    @property
+    def common_name(self):
+        """ common_name.setter validates the FQDN that will be used to generate
+            the CN field for the certificate. This will typically be the same value as the system_name outside of certain use cases for load balancer where the system Ottr connects to needs to generate a certificate with a CN different than the system_name.
+
+        Returns:
+            Validates FQDN, exception will be thrown if format is incorrect.
+        """
+        return self._common_name
+
+    @common_name.setter
+    def common_name(self, value):
+        self._common_name = value
+        domain = '{domain}.{suffix}'.format(domain=tldextract.extract(
+            self._common_name).domain, suffix=tldextract.extract(self._common_name).suffix)
+        if not isinstance(value, str):
+            raise TypeError('common_name required be a string (str)')
+        if self._common_name != 'None':
+            if not bool(tldextract.extract(self._common_name).suffix):
+                raise DeviceValidationError(
+                    f'common_name Does Not Contain a FQDN: {self.common_name}')
+            if domain not in self._valid_domains:
+                raise DeviceValidationError(
+                    "common_name {} Not a Valid Domain: {}".format(
+                    self._common_name, self._valid_domains))
+        else:
+            raise DeviceValidationError("common_name Empty, Please Provide a FQDN.")
 
     @property
     def ip_address(self):

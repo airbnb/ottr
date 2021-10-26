@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - development
     tags:
       - 'v*.*.*'
 
@@ -16,14 +17,26 @@ jobs:
         python:
           - 3.9
         task:
-          - name: Unit
+          - name: Ottr Unit Test
             command: |
-              tox -e py39
+              tox -e coverage-api
+              tox -e coverage-acme
     name: "Python ${{ matrix.python }}/${{ matrix.task.name }}"
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v2"
         with:
           python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox tox-gh-actions coverage coveralls
+          sudo apt-get install -y nmap
       - name: ${{ matrix.task.name }}
         run: ${{ matrix.task.command }}
+      - name: Merge Coverage
+        run: coverage combine .coverage_api .coverage_acme
+      - name: Submit Coverage
+        run: ([ -z "$COVERALLS_REPO_TOKEN" ] && echo "coveralls is skipped in forked repo tests" || coveralls)
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}

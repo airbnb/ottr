@@ -1,5 +1,10 @@
 # Ottr: Serverless Public Key Infrastructure Framework
 
+[![Coverage
+Status](https://coveralls.io/repos/github/airbnb/ottr/badge.svg?branch=main)](https://coveralls.io/github/airbnb/ottr?branch=main)
+[![Actions
+CI](https://github.com/airbnb/ottr/actions/workflows/ci.yaml/badge.svg)](https://github.com/airbnb/ottr/actions/workflows/ci.yaml)
+
 <img src="docs/images/otter.png" width="40%" height="40%" />
 
 _Ottr is a serverless framework for Public Key Infrastructure (PKI) that aims to

@@ -6,6 +6,7 @@ terraform.tfstate.backup
 .DS_Store
 .history
 .vscode
+Pipfile
 
 .kitchen/*
 
@@ -21,3 +22,5 @@ db.sqlite3
 .coverage
 htmlcov/
 .tox/
+.coverage.*
+.coverage_*

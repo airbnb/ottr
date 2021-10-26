@@ -13,6 +13,7 @@ class TestSystemName:
         with pytest.raises(TypeError):
             device = Device(
                 system_name=123,
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -27,6 +28,7 @@ class TestSystemName:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.invalid.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -41,6 +43,7 @@ class TestSystemName:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.airbnb',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -57,6 +60,7 @@ class TestHostname:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address=123,
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -71,6 +75,7 @@ class TestHostname:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -85,6 +90,7 @@ class TestHostname:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.x',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -99,6 +105,7 @@ class TestHostname:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.256',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -113,6 +120,7 @@ class TestHostname:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 certificate_authority='lets_encrypt',
                 data_center='example',
                 host_platform='panos',
@@ -128,6 +136,7 @@ class TestCertificateAuthority:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority=123,
                 data_center='example',
@@ -142,6 +151,7 @@ class TestCertificateAuthority:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='invalid_ca',
                 data_center='example',
@@ -158,6 +168,7 @@ class TestHostPlatform:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -179,6 +190,7 @@ class TestSubjectAlternativeName:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -193,6 +205,7 @@ class TestSubjectAlternativeName:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -207,6 +220,7 @@ class TestSubjectAlternativeName:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.invalid.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -220,6 +234,7 @@ class TestSubjectAlternativeName:
     def test_subject_alternative_name_none(self):
         device = Device(
             system_name='test.example.com',
+            common_name='test.example.com',
             ip_address='10.0.0.1',
             certificate_authority='lets_encrypt',
             data_center='example',
@@ -234,6 +249,7 @@ class TestSubjectAlternativeName:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -248,6 +264,7 @@ class TestSubjectAlternativeName:
         with pytest.raises(DeviceValidationError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='example',
@@ -262,6 +279,7 @@ class TestSubjectAlternativeName:
 class TestValidDevice:
     device = Device(
         system_name='test.example.com',
+        common_name='test.example.com',
         ip_address='10.0.0.1',
         certificate_authority='lets_encrypt',
         data_center='example',
@@ -279,7 +297,7 @@ class TestValidDevice:
         assert TestValidDevice.device.ip_address == '10.0.0.1'
 
     def test_str_method(self):
-        output = "{ip_address: 10.0.0.1, system_name: test.example.com, host_platform: panos,             os_version: 1.0.0, device_model: PA-XXXX, certificate_authority: lets_encrypt,             data_center: example, subject_alternative_name: ['example.com'], origin: API}"
+        output = "{ip_address: 10.0.0.1, system_name: test.example.com, common_name: test.example.com, host_platform: panos, os_version: 1.0.0, device_model: PA-XXXX, certificate_authority: lets_encrypt, data_center: example, subject_alternative_name: ['example.com'], validate_certificate: True}"
         assert str(TestValidDevice.device) == output
 
 
@@ -288,6 +306,7 @@ class TestDeviceTypeError:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center=['dc1', 'dc2'],
@@ -302,6 +321,7 @@ class TestDeviceTypeError:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='dc1',
@@ -316,6 +336,7 @@ class TestDeviceTypeError:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='dc1',
@@ -330,6 +351,7 @@ class TestDeviceTypeError:
         with pytest.raises(TypeError):
             device = Device(
                 system_name='test.example.com',
+                common_name='test.example.com',
                 ip_address='10.0.0.1',
                 certificate_authority='lets_encrypt',
                 data_center='dc1',

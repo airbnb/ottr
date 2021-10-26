@@ -42,7 +42,7 @@ if DATABASE_ENGINE == 'SQLITE':
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     }
 
-elif DATABASE_ENGINE == 'POSTGRESQL':
+elif DATABASE_ENGINE == 'POSTGRESQL': # pragma: no cover
     db_params = {
         'host': os.environ['POSTGRES_HOST'],
         'database': os.environ['POSTGRES_DB'],
@@ -52,7 +52,7 @@ elif DATABASE_ENGINE == 'POSTGRESQL':
     }
 
     # Aurora Postgres Serverless
-    DB_URI = 'postgresql://{user}:{pwd}@{host}:{port}'
+    DB_URI = 'postgresql://{user}:{pwd}@{host}:{port}' # pragma: no cover
 
     # AWS RDS Certificate
     # url = "https://truststore.pki.rds.amazonaws.com/{region}/{region}-bundle.pem".format(
@@ -69,9 +69,9 @@ elif DATABASE_ENGINE == 'POSTGRESQL':
     db_config = {
         'SQLALCHEMY_DATABASE_URI': DB_URI.format(**db_params),
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-    }
+    } # pragma: no cover
 
-else:
+else: # pragma: no cover
     raise Exception('Incorrect DATABASE_ENGINE')
 
 db = SQLAlchemy()
