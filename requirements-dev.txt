@@ -1,0 +1,11 @@
+-r requirements.txt
+moto
+mock
+boto3
+pyOpenSSL
+coverage
+pytest-cov
+bandit
+autopep8
+requests
+pylint==2.9.3

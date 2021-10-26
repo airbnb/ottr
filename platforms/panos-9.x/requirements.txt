@@ -1,0 +1,7 @@
+requests>=2.25.0
+defusedxml>=0.7.1
+pyOpenSSL>=19.1.0
+boto3>=1.16.5
+botocore>=1.19.5
+cryptography==3.3.2
+ottr-airbnb>=0.0.1

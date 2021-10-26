@@ -1,0 +1,54 @@
+name: Feature Request
+description: Request a Feature
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees:
+  - yangkenneth
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the solution that you'd like implemented.
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: alternate
+    attributes:
+      label: Alternative Solution
+      description: Describe any alternatives that you've considered.
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: textarea
+    id: addition
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://airbnb.io/codeofconduct/)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

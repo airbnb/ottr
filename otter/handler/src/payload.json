@@ -1,0 +1,33 @@
+[
+  {
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": ""
+    }
+  },
+  {
+    "type": "actions",
+    "elements": [
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Help"
+        },
+        "value": "help",
+        "url": ""
+      },
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "CloudWatch Logs"
+        },
+        "style": "primary",
+        "value": "aws",
+        "url": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+# Ignore terraform state files
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+
+.DS_Store
+.history
+.vscode
+
+.kitchen/*
+
+# Ignore provider lock file (for now):
+.terraform.lock.hcl
+
+__pycache__/
+ *.pyc
+.pytest_cache
+
+# Coverage
+db.sqlite3
+.coverage
+htmlcov/
+.tox/

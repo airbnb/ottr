@@ -1,0 +1,68 @@
+{
+  "note": {
+    "description": "Routes to trigger certificate renewal or generation based on Platform, OS Version, and Certificate Authority."
+  },
+  "platform": {
+    "panos": {
+      "os": {
+        "8.1.0": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-panos-8x-lets-encrypt"
+          },
+          "model": ["PA-XXXX", "PA-YYYY"]
+        },
+        "9.1.0": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-panos-9x-lets-encrypt"
+          },
+          "model": ["PA-XXXX", "PA-YYYY"]
+        }
+      }
+    },
+    "f5": {
+      "os": {
+        "14.1.0": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-f5-14x-lets-encrypt"
+          }
+        }
+      }
+    },
+    "lighthouse": {
+      "os": {
+        "21.Q2.0": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-lighthouse-21x-lets-encrypt"
+          }
+        }
+      }
+    },
+    "Ubuntu": {
+      "os": {
+        "16.04": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-linux-aws-ssm-lets-encrypt"
+          }
+        },
+        "18.04": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-linux-aws-ssm-lets-encrypt"
+          }
+        },
+        "20.04": {
+          "certificate_authority": {
+            "lets_encrypt": "otter-linux-aws-ssm-lets-encrypt"
+          }
+        }
+      }
+    },
+    "Windows": "PENDING",
+    "ios": "PENDING",
+    "nxos": "PENDING"
+  },
+  "certificate_authorities": ["lets_encrypt", "digicert"],
+  "certificate_authority_organization": ["Let's Encrypt", "DigiCert Inc"],
+  "hosted_zones": {
+    "example.com": "XXXXXXXXXXXXXX"
+  }
+}

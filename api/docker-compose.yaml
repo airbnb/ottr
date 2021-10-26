@@ -1,0 +1,63 @@
+version: "3.7"
+
+services:
+  # Development Mode
+
+  # db:
+  #   image: otter-db
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/db/Dockerfile
+  #     args:
+  #       - POSTGRES_DB=otter
+  #       - POSTGRES_USER=postgres
+  #       - POSTGRES_PASSWORD=NULL
+  #       - POSTGRES_PORT=5432
+  #       - AWS_DEFAULT_REGION=${AWS_REGION}
+  #       - TABLE=${TABLE}
+  #       - PREFIX=${PREFIX}
+
+  #       - AWS_ACCESS_KEY_ID=
+  #       - AWS_SECRET_ACCESS_KEY=
+  #       - AWS_SESSION_TOKEN=
+
+  #   ports:
+  #     - "5432:5432"
+
+  envoy:
+    container_name: otter-envoy
+    image: otter-envoy
+    build:
+      context: .
+      dockerfile: ./docker/envoy/Dockerfile
+
+  otter:
+    container_name: otter-api
+    image: otter-api
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+      args:
+        - DATABASE_ENGINE=POSTGRESQL
+        - POSTGRES_DB=otter
+        - POSTGRES_USER=postgres
+        - POSTGRES_PORT=5432
+        - POSTGRES_HOST=db
+        - AWS_DEFAULT_REGION=${AWS_REGION}
+        - AWS_ACCOUNT=${AWS_ACCOUNT_ID}
+        - TABLE=${TABLE}
+        - PREFIX=${PREFIX}
+
+        # Development Mode:
+        # - POSTGRES_PASSWORD=NULL
+        # - AWS_ACCESS_KEY_ID=
+        # - AWS_SECRET_ACCESS_KEY=
+        # - AWS_SESSION_TOKEN=
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - envoy
+
+      # Development Mode
+      # - db
