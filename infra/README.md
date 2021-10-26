@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. Set the default region for Terraform in [infra/variables.tf](variables.tf).
+1. Set the default region for Terraform in [`infra/variables.tf`](variables.tf).
 2. Within the [`routing config`](../otter/router/src/config/route.json) file and
    [`API routing config`](../api/backend/app/config/route.json) file there will be a field named
    `hosted_zones`. Add your organization's domain(s) as the key and the Route53
