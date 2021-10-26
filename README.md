@@ -12,4 +12,4 @@ using an agentless approach._
 - [Supported Platforms](docs/SUPPORT.md)
 - [Setup](docs/SETUP.md)
 - [Contribute](docs/CONTRIBUTE.md)
-- [Airbnb Engineering Blog Post](https://medium.com/airbnb-engineering)
+- [Airbnb Engineering Blog Post](https://medium.com/airbnb-engineering/meet-ottr-a-serverless-public-key-infrastructure-framework-f6580010ae0c)

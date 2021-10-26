@@ -1,0 +1,29 @@
+---
+name: Actions CI
+on:
+  pull_request: {}
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python:
+          - 3.9
+        task:
+          - name: Unit
+            command: |
+              tox -e py39
+    name: "Python ${{ matrix.python }}/${{ matrix.task.name }}"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v2"
+        with:
+          python-version: ${{ matrix.python }}
+      - name: ${{ matrix.task.name }}
+        run: ${{ matrix.task.command }}
