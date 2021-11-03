@@ -14,3 +14,4 @@ tldextract==3.1.0
 python-nmap==0.6.4
 flask_restx>=0.5.1
 cryptography>=3.2
+pytest-httpserver==1.0.2

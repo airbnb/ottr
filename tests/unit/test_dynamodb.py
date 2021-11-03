@@ -5,7 +5,7 @@ from moto.dynamodb2 import mock_dynamodb2
 from otter.router.src.shared.client import DynamoDBClient, get_valid_devices
 from otter.router.src.shared.device import Device
 
-DYNAMODB_TABLE = "otter-example"
+DYNAMODB_TABLE = "ottr-example"
 
 
 @pytest.fixture
@@ -88,9 +88,7 @@ def _init_database():
                         'ProjectionType': 'ALL',
                     },
                 },
-            ],
-            ProvisionedThroughput={
-                "ReadCapacityUnits": 10, "WriteCapacityUnits": 10},
+            ]
         )
 
         # Populate Mock Database with Asset
@@ -98,6 +96,7 @@ def _init_database():
                                 table_name=DYNAMODB_TABLE)
         device = Device(
             system_name='test.example.com',
+            common_name='test.example.com',
             ip_address='10.0.0.1',
             certificate_authority='digicert',
             data_center='example',
@@ -107,7 +106,7 @@ def _init_database():
             origin='API',
             subject_alternative_name=['example.com']
         )
-        client.put_item(device)
+        client.create_item(device)
 
         return dynamodb
     return dynamodb_client
@@ -116,12 +115,13 @@ def _init_database():
 @mock_dynamodb2
 def test_dynamodb_update_item(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)
     device = Device(
         system_name='test.example.com',
+        common_name='test.example.com',
         ip_address='10.0.0.1',
         certificate_authority='lets_encrypt',
         data_center='CHANGED',
@@ -132,7 +132,7 @@ def test_dynamodb_update_item(_init_database, monkeypatch):
         subject_alternative_name=['example.com']
     )
 
-    client.put_item(device)
+    client.update_item(device)
     output = client._get_query('test.example.com')
     assert output['Items'][0].get('data_center') == 'CHANGED'
 
@@ -140,7 +140,7 @@ def test_dynamodb_update_item(_init_database, monkeypatch):
 @mock_dynamodb2
 def test_dynamodb_scan_table(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)
@@ -151,12 +151,13 @@ def test_dynamodb_scan_table(_init_database, monkeypatch):
 @mock_dynamodb2
 def test_dynamodb_put_multiple_items(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)
     device = Device(
         system_name='second.example.com',
+        common_name='second.example.com',
         ip_address='10.0.0.1',
         certificate_authority='lets_encrypt',
         data_center='example',
@@ -167,7 +168,7 @@ def test_dynamodb_put_multiple_items(_init_database, monkeypatch):
         subject_alternative_name=['example.com']
     )
 
-    client.put_item(device)
+    client.create_item(device)
     output = client.scan_table()
     assert output.get('Count') == 2
 
@@ -175,12 +176,13 @@ def test_dynamodb_put_multiple_items(_init_database, monkeypatch):
 @mock_dynamodb2
 def test_dynamodb_query_items_valid(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)
     device = Device(
         system_name='test.example.com',
+        common_name='test.example.com',
         ip_address='10.0.0.1',
         certificate_authority='lets_encrypt',
         data_center='example',
@@ -190,7 +192,7 @@ def test_dynamodb_query_items_valid(_init_database, monkeypatch):
         origin='API',
         subject_alternative_name=['example.com']
     )
-    client.put_item(device)
+    client.create_item(device)
     output = client._get_query('test.example.com')
     assert output['Items'][0].get('system_name') == 'test.example.com'
 
@@ -198,12 +200,13 @@ def test_dynamodb_query_items_valid(_init_database, monkeypatch):
 @mock_dynamodb2
 def test_dynamodb_maintain_ca(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)
     device = Device(
         system_name='test.example.com',
+        common_name='test.example.com',
         ip_address='10.0.0.1',
         certificate_authority='lets_encrypt',
         data_center='example',
@@ -214,14 +217,14 @@ def test_dynamodb_maintain_ca(_init_database, monkeypatch):
         subject_alternative_name=['example.com']
     )
 
-    output = client.put_item(device)
+    output = client.update_item(device)
     assert output['Attributes'].get('certificate_authority') == 'digicert'
 
 
 @mock_dynamodb2
 def test_dynamodb_delete_item(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)
@@ -234,7 +237,7 @@ def test_dynamodb_delete_item(_init_database, monkeypatch):
 @mock_dynamodb2
 def test_dynamodb_expiration_lookup(_init_database, monkeypatch):
     monkeypatch.setenv('aws_region', 'us-east-1')
-    monkeypatch.setenv('dynamodb_table', 'otter-example')
+    monkeypatch.setenv('dynamodb_table', 'ottr-example')
     _init_database()
 
     client = DynamoDBClient(region_name='us-east-1', table_name=DYNAMODB_TABLE)

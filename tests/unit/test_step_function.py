@@ -162,11 +162,15 @@ def test_state_machine_start_execution(monkeypatch):
         "assets": [
             {
                 "hostname": "test.example.com",  # PanOS 9.x Device
+                "common_name": "test.example.com",
+                "certificate_validation": "True",
                 "task_definition": "otter-panos-9x-lets-encrypt",
                 "dns": "XXXXXXXXXXXXXX"  # Route53 Hosted Zone ID for example.com
             },
             {
-                "hostname": "test.company.com",  # F5 14.x Device
+                "hostname": "test.company.com",  # F5 14.x Device,
+                "common_name": "test.example.com",
+                "certificate_validation": "True",
                 "task_definition": "otter-f5-14x-lets-encrypt",
                 "dns": "YYYYYYYYYYYYYY"  # Route53 Hosted Zone ID for company.com
             }

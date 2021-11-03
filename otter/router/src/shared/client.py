@@ -61,10 +61,12 @@ class DynamoDBClient:
             LOGGER.error(response)
         return response
 
-    def _create_item(self, device: Device) -> Union[dict, None]:
+    def create_item(self, device: Device) -> Union[dict, None]:
         payload = {
             "system_name": device.system_name,
+            "common_name": device.common_name,
             "ip_address": device.ip_address,
+            "certificate_validation": "True",
             "host_platform": device.host_platform,
             "certificate_authority": device.certificate_authority,
             "os_version": device.os_version,
@@ -81,7 +83,7 @@ class DynamoDBClient:
             LOGGER.error(f'Error ({device.system_name}): {response}')
         return response
 
-    def _update_item(self, device: Device) -> Union[dict, None]:
+    def update_item(self, device: Device) -> Union[dict, None]:
         response = self._table.update_item(
             Key={
                 'system_name': device.system_name
@@ -89,9 +91,10 @@ class DynamoDBClient:
             UpdateExpression="SET ip_address = :ip_address, \
                 host_platform = :host_platform, os_version = :os_version, \
                 data_center = :data_center, device_model = :device_model, \
-                subject_alternative_name = :subject_alternative_name, origin = :origin",
+                subject_alternative_name = :subject_alternative_name, origin = :origin, common_name = :common_name",
             ExpressionAttributeValues={
                 ":ip_address": device.ip_address,
+                ":common_name": device.common_name,
                 ":host_platform": device.host_platform,
                 ":os_version": device.os_version,
                 ":data_center": device.data_center,
@@ -136,26 +139,6 @@ class DynamoDBClient:
         )
         LOGGER.info(f'Deleted {system_name} from DynamoDB: {response}')
         return response
-
-    def put_item(self, device: Device) -> dict:
-        """
-        Used to check if asset currently exists within the asset inventory
-        database. If device exists, the _update_item function is used
-        to update an existing item. Otherwise, the _create_item function
-        is used to create a new element in the database.
-
-
-        Args:
-            device (Device): Device Object
-
-        Returns:
-            dict: AWS DynamoDB put_item() or update_item() Response
-        """
-        if not bool(self._get_query(device.system_name)['Items']):
-            return self._create_item(device)
-        else:
-            return self._update_item(device)
-
 
 def _validate_route(host: dict) -> Union[str, None]:
     system_name = host.get('system_name')

@@ -41,8 +41,6 @@ class generic_exception(object):
 # HTTP Request Error Handling
 
 def http_exception(func):
-    print('exception')
-
     def wrapper(*args, **kwargs):
         resp: requests.models.Response = func(*args, **kwargs)
         if resp.status_code != 200:

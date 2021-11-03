@@ -238,7 +238,7 @@ class DynamoDBClient:
             LOGGER.error(f'Error ({device.system_name}): {response}')
         return response
 
-    def unset_certificate_validation(self, system_name: str, status: str) -> Union[dict, None]:
+    def set_certificate_validation(self, system_name: str, status: str) -> Union[dict, None]:
         response = self._table.update_item(
             Key={
                 'system_name': system_name
