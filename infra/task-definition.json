@@ -1,0 +1,132 @@
+[
+  {
+    "dnsSearchDomains": null,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "secretOptions": null,
+      "options": {
+        "awslogs-group": "/ecs/otter",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "api"
+      }
+    },
+    "entryPoint": null,
+    "portMappings": [
+      {
+        "hostPort": 8000,
+        "protocol": "tcp",
+        "containerPort": 8000
+      }
+    ],
+    "command": null,
+    "linuxParameters": null,
+    "cpu": 0,
+    "environment": [
+      {
+        "name": "POSTGRES_DB",
+        "value": "otter"
+      },
+      {
+        "name": "POSTGRES_PORT",
+        "value": "5432"
+      },
+      {
+        "name": "DATABASE_ENGINE",
+        "value": "POSTGRESQL"
+      },
+      {
+        "name": "POSTGRES_HOST",
+        "value": "${aurora_endpoint}"
+      }
+    ],
+    "resourceRequirements": null,
+    "ulimits": null,
+    "dnsServers": null,
+    "mountPoints": [],
+    "workingDirectory": null,
+    "secrets": [
+      {
+        "name": "POSTGRES_PASSWORD",
+        "valueFrom": "${secrets_manager_database_arn}:POSTGRES_PASSWORD::"
+      },
+      {
+        "name": "POSTGRES_USER",
+        "valueFrom": "${secrets_manager_database_arn}:POSTGRES_USER::"
+      }
+    ],
+    "dockerSecurityOptions": null,
+    "memory": null,
+    "memoryReservation": null,
+    "volumesFrom": [],
+    "stopTimeout": null,
+    "image": "${otter_image_uri}",
+    "startTimeout": null,
+    "dependsOn": null,
+    "disableNetworking": null,
+    "interactive": null,
+    "healthCheck": null,
+    "essential": true,
+    "links": null,
+    "hostname": null,
+    "extraHosts": null,
+    "pseudoTerminal": null,
+    "user": null,
+    "readonlyRootFilesystem": null,
+    "dockerLabels": null,
+    "systemControls": null,
+    "privileged": null,
+    "name": "service"
+  },
+  {
+    "dnsSearchDomains": null,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "secretOptions": null,
+      "options": {
+        "awslogs-group": "/ecs/otter",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "api"
+      }
+    },
+    "entryPoint": null,
+    "portMappings": [
+      {
+        "hostPort": 8443,
+        "protocol": "tcp",
+        "containerPort": 8443
+      }
+    ],
+    "command": null,
+    "linuxParameters": null,
+    "cpu": 0,
+    "environment": [{ "name": "DNS_NAME", "value": "${dns_namespace}" }],
+    "resourceRequirements": null,
+    "ulimits": null,
+    "dnsServers": null,
+    "mountPoints": [],
+    "workingDirectory": null,
+    "secrets": null,
+    "dockerSecurityOptions": null,
+    "memory": null,
+    "memoryReservation": null,
+    "volumesFrom": [],
+    "stopTimeout": null,
+    "image": "${envoy_image_uri}",
+    "startTimeout": null,
+    "dependsOn": null,
+    "disableNetworking": null,
+    "interactive": null,
+    "healthCheck": null,
+    "essential": true,
+    "links": null,
+    "hostname": null,
+    "extraHosts": null,
+    "pseudoTerminal": null,
+    "user": null,
+    "readonlyRootFilesystem": null,
+    "dockerLabels": null,
+    "systemControls": null,
+    "privileged": null,
+    "name": "envoy"
+  }
+]
