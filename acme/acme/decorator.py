@@ -16,13 +16,13 @@ limitations under the License.
 
 import requests
 import json
+import sys
 
 from .logger import get_logger
 
 LOGGER = get_logger(__name__)
 
 # Generic Exception Error Handling
-
 
 class generic_exception(object):
     def __init__(self, message):
@@ -43,8 +43,9 @@ class generic_exception(object):
 def http_exception(func):
     def wrapper(*args, **kwargs):
         resp: requests.models.Response = func(*args, **kwargs)
-        if resp.status_code != 200:
-            raise RuntimeError(**json.loads(resp._content))
+        if resp.status_code >= 400:
+            LOGGER.error(**json.loads(resp._content))
+            sys.exit(1)
         else:
             return resp
 

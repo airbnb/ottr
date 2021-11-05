@@ -73,7 +73,7 @@ def main():
     global acme_request
 
     region_name = os.environ['AWS_REGION']
-    hostname = os.environ['HOSTNAME']
+    hostname = os.environ['SYSTEM_NAME']
     common_name = os.environ['COMMON_NAME']
     dns = os.environ['ACME_DNS']
     prefix = os.environ['PREFIX']

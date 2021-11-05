@@ -72,6 +72,19 @@ def _generate_payload(message, task_definition, task_id):
     return payload
 
 
+def _generate_error_payload(message):
+    with open('./payload.json') as file:
+        region = os.environ['aws_region']
+        data = json.load(file)
+        data[0]['text']['text'] = message
+        data[1]['elements'][0]['url'] = redirect
+        data[1]['elements'][1][
+            'url'] = f'https://console.aws.amazon.com/cloudwatch/home?region={region}#logsV2:log-groups/log-group/$252Faws$252Flambda$252Fotter-handler'
+        payload = json.dumps(data, indent=4)
+
+    return payload
+
+
 def _query_metadata(hostname: str):
     resource = boto3.resource(
         'dynamodb', region_name=os.environ['aws_region'])
@@ -116,6 +129,39 @@ def post_message(hostname: str, task_definition: str, task_id: str) -> None:
                f'*Hostname:* `{fqdn}`\n*IPv4 Address:* `{ip_address}`\n*Certificate Expiration:* `{certificate_expiration}`\n*Platform:* `{platform}`\n*OS Version:* `{os_version}`\n*Certificate Authority:* `{certificate_authority}`')
 
     payload = _generate_payload(message, task_definition, task_id)
+    post_message_url = 'https://slack.com/api/chat.postMessage'
+    post_data = {
+        'token': oauth_token,
+        'channel': channel,
+        'blocks': payload
+    }
+
+    response = requests.post(
+        post_message_url,
+        headers=headers['post'],
+        data=json.dumps(post_data)
+    )
+
+    LOGGER.info(response.text)
+
+
+def post_error_message(message: str) -> None:
+    prefix = os.environ['prefix']
+    oauth_token = _retrieve_secret(
+        f'{prefix}/otter/slack')
+
+    headers = {
+        'post': {
+            'Authorization': 'Bearer {}'.format(oauth_token),
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        'get': {
+            'Authorization': 'Bearer {}'.format(oauth_token),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }
+
+    payload = _generate_error_payload(message)
     post_message_url = 'https://slack.com/api/chat.postMessage'
     post_data = {
         'token': oauth_token,

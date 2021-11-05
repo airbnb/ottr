@@ -17,7 +17,7 @@ limitations under the License.
 import json
 
 from logger import get_logger
-from message import post_message
+from message import post_message, post_error_message
 
 LOGGER = get_logger(__name__)
 
@@ -31,15 +31,22 @@ def main(event, lambda_context):
         task_arn = output['Containers'][0]['TaskArn']
         task_id = task_arn.split('/')[-1]
         task_definition = output['Group'].split(':')[-1]
-
         environment = output['Overrides']['ContainerOverrides'][0]['Environment']
-        for elem in environment:
-            if elem['Name'] == 'HOSTNAME':
-                hostname = elem['Value']
-                break
 
-        post_message(hostname=hostname,
-                     task_definition=task_definition, task_id=task_id)
+        sent_message = False
+        for elem in environment:
+            if elem['Name'] == 'SYSTEM_NAME':
+                hostname = elem['Value']
+                post_message(hostname=hostname,
+                             task_definition=task_definition, task_id=task_id)
+                sent_message = True
+                break
+        if sent_message is False:
+            message = (
+                f'_Error Ocurred in Lambda Handler for `{hostname}` Container Runtime, Please Investigate CloudWatch Logs._')
+            post_error_message(message)
     else:
         # ECS.ClientException
-        pass
+        message = (
+            f'_`{error}` Error Ocurred in Lambda Handler during Container Runtime, Please Investigate CloudWatch Logs._')
+        post_error_message(message)

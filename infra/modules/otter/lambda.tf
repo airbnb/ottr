@@ -151,6 +151,11 @@ resource "aws_iam_role" "otter_handler" {
 EOF
 }
 
+resource "aws_iam_role_policy_attachment" "lambda-basic-execution-attachment-handler" {
+  role       = aws_iam_role.otter_handler.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 data "aws_iam_policy_document" "otter_handler" {
   statement {
     effect = "Allow"

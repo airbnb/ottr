@@ -18,7 +18,7 @@ export DYNAMODB_TABLE=""
 export HOSTED_ZONE_ID=""
 
 # FQDN of System for Ottr to Connect (FQDN: i.e. subdomain.example.com)
-export HOSTNAME=""
+export SYSTEM_NAME=""
 
 # Certificate Common Name (CN: i.e. subdomain.example.com)
 export COMMON_NAME=""

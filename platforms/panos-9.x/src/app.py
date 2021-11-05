@@ -186,7 +186,7 @@ def main():
     requests.packages.urllib3.disable_warnings()
     global acme_request
 
-    hostname = os.environ['HOSTNAME']
+    hostname = os.environ['SYSTEM_NAME']
     common_name = os.environ['COMMON_NAME']
     region_name = os.environ['AWS_REGION']
     dns = os.environ['ACME_DNS']

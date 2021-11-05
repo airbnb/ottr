@@ -15,8 +15,8 @@ LOGGER = acme.get_logger(__name__)
 def main():
     requests.packages.urllib3.disable_warnings()
 
-    region_name = os.getenv('AWS_REGION')
-    hostname = os.environ['HOSTNAME']
+    region_name = os.environ['AWS_REGION']
+    hostname = os.environ['SYSTEM_NAME']
     common_name = os.environ['COMMON_NAME']
     dns = os.environ['ACME_DNS']
     prefix = os.environ['PREFIX']
