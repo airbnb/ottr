@@ -278,8 +278,8 @@ def _get_command_status(command_id, instance_id):
             sys.exit(1)
 
 def main():
-    region_name = os.getenv('AWS_REGION')
-    hostname = os.environ['HOSTNAME_ENV']
+    region_name = os.environ['AWS_REGION']
+    hostname = os.environ['SYSTEM_NAME']
     common_name = os.environ['COMMON_NAME']
     dns = os.environ['ACME_DNS']
     local_path = os.environ['HOME']

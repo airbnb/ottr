@@ -14,7 +14,7 @@ resource "aws_sfn_state_machine" "otter" {
 				"States": {
 					"PlatformTaskExecution": {
 						"Type": "Task",
-						"TimeoutSeconds": 3600,
+						"TimeoutSeconds": 600,
 						"Resource": "arn:aws:states:::ecs:runTask.sync",
 						"Parameters": {
 							"LaunchType": "FARGATE",
@@ -25,7 +25,7 @@ resource "aws_sfn_state_machine" "otter" {
 									"Name": "otter",
 									"Environment": [
 										{
-											"Name": "HOSTNAME",
+											"Name": "SYSTEM_NAME",
 											"Value.$": "$.asset.hostname"
 										},
 										{
