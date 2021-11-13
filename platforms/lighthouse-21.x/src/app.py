@@ -108,7 +108,10 @@ def main():
         hostname)
 
     le_client = acme.LetsEncrypt(
-        hostname=hostname, subdelegate=dns, subject_alternative_names=subject_alternative_names,
+        hostname=hostname,
+        common_name=common_name,
+        subdelegate=dns,
+        subject_alternative_names=subject_alternative_names,
         region=region_name)
 
     session = generate_api_token(hostname, username, password)
@@ -121,7 +124,7 @@ def main():
     import_certificate(hostname, common_name, session)
     time.sleep(60)
 
-    expiration = acme.query_certificate_expiration(hostname)
+    expiration = acme.query_certificate_expiration(hostname, common_name)
     acme.update_certificate_expiration(hostname, expiration)
 
 

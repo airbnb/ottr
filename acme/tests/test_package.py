@@ -22,7 +22,7 @@ def test_subject_alternative_names_validation(init_dns, secretsmanager_client):
     subject_alternative_names = [
         'test.example.com']
     client = acme.LetsEncrypt(
-        hostname='example.com', subdelegate='example-acme.com', subject_alternative_names=subject_alternative_names,
+        hostname='example.com', common_name='example.com', subdelegate='example-acme.com', subject_alternative_names=subject_alternative_names,
         region=REGION)
 
 
@@ -33,7 +33,7 @@ def test_dns_acme_challenge_invalid(init_dns, secretsmanager_client):
     subject_alternative_names = ['invalid.example.com']
     with pytest.raises(SystemExit) as system:
         client = acme.LetsEncrypt(
-            hostname='example.com', subdelegate='example-acme.com', subject_alternative_names=subject_alternative_names,
+            hostname='example.com', common_name='example.com', subdelegate='example-acme.com', subject_alternative_names=subject_alternative_names,
             region=REGION)
         assert system.type == SystemExit
         assert system.value.code == 1
@@ -46,7 +46,7 @@ def test_register_lets_encrypt_account_exception(init_dns):
     subject_alternative_names = ['test.example.com']
     with pytest.raises(SystemExit) as system:
         client = acme.LetsEncrypt(
-            hostname='example.com', subdelegate='example-acme.com', subject_alternative_names=subject_alternative_names,
+            hostname='example.com', common_name='example.com', subdelegate='example-acme.com', subject_alternative_names=subject_alternative_names,
             region=REGION)
         assert system.type == SystemExit
         assert system.value.code == 1
@@ -93,8 +93,7 @@ def test_update_certificate_invalid_expiration_format(init_database):
 def test_openssl_certificate_check_remote(init_database):
     init_database()
     with pytest.raises(SystemExit) as system:
-        output = acme.query_certificate_expiration('example.com')
-        print(output)
+        output = acme.query_certificate_expiration(system_name='example.com', common_name='example.com')
         assert system.type == SystemExit
         assert system.value.code == 1
 

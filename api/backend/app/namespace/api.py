@@ -247,12 +247,13 @@ class RotateExpiredCertificate(Resource):
                 return {'Invalid Host': '{}'.format(system_name)}, 200
             else:
                 device = query.get('Items')[0]
+                common_name = device.get('common_name')
                 # Route53 DNS Mapping
-                output = tldextract.extract(system_name)
+                output = tldextract.extract(common_name)
                 domain = output.domain + '.' + output.suffix
                 subdomain = output.subdomain
                 if not query_acme_challenge_records(domain, subdomain):
-                    return {'Route53 Error': 'DNS CNAME Record Not Found for {}'.format(system_name)}, 200
+                    return {'Route53 Error': 'DNS CNAME Record Not Found for {}'.format(common_name)}, 200
                 client.start_execution(device)
                 return '', 204
         else:
@@ -273,7 +274,8 @@ class UnsetCertificateValidation(Resource):
             if not query['Items']:
                 return {'Invalid Host': '{}'.format(system_name)}, 200
             else:
-                response = dynamodb_client.set_certificate_validation(system_name=system_name, status='False')
+                response = dynamodb_client.set_certificate_validation(
+                    system_name=system_name, status='False')
                 if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                     return {f'Certificate Validation Unset': f'Certificate validation disabled for the next execution on {system_name}. Please ensure this endpoint was only executed if the current certification on {system_name} is either a self-signed or an invalid certificate.'}, 200
         else:
@@ -293,7 +295,8 @@ class SetCertificateValidation(Resource):
             if not query['Items']:
                 return {'Invalid Host': '{}'.format(system_name)}, 200
             else:
-                response = dynamodb_client.set_certificate_validation(system_name=system_name, status='True')
+                response = dynamodb_client.set_certificate_validation(
+                    system_name=system_name, status='True')
                 if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                     return {f'Certificate Validation Enabled': f'Certificate validation enabled on {system_name}. Please ensure {system_name} does not currently have a self-signed or invalid certificate.'}, 200
         else:

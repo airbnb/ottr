@@ -90,7 +90,10 @@ def main():
         hostname)
 
     le_client = acme.LetsEncrypt(
-        hostname=hostname, subdelegate=dns, subject_alternative_names=subject_alternative_names,
+        hostname=hostname,
+        common_name=common_name,
+        subdelegate=dns,
+        subject_alternative_names=subject_alternative_names,
         region=region_name)
 
     # Authenticate
@@ -189,7 +192,7 @@ def main():
         LOGGER.info(output)
 
         # Update DynamoDB Table
-        expiration = acme.query_certificate_expiration(hostname)
+        expiration = acme.query_certificate_expiration(hostname, common_name)
         acme.update_certificate_expiration(hostname, expiration)
     # Revert Logic
     except Exception as error:

@@ -108,7 +108,7 @@ def _decode_certificate(certificate: str) -> Tuple[str, str]:
     return (certificate_expiration, certificate_issuer)
 
 
-def query_certificate_expiration(system_name: str) -> str:
+def query_certificate_expiration(system_name: str, common_name: str) -> str:
     excluded_platforms = ['Ubuntu', 'Windows']
     host_platform = _query_primary_key(
         system_name)['Items'][0].get('host_platform')
@@ -117,7 +117,7 @@ def query_certificate_expiration(system_name: str) -> str:
 
     if host_platform in excluded_platforms:
         with open(
-                '{directory}/.acme.sh/{hostname}/fullchain.cer'.format(directory=os.environ['HOME'], hostname=system_name), 'r') as file:
+                '{directory}/.acme.sh/{common_name}/fullchain.cer'.format(directory=os.environ['HOME'], common_name=common_name), 'r') as file:
             certificate = file.read()
             certificate_expiration, certificate_issuer = _decode_certificate(
                 certificate)

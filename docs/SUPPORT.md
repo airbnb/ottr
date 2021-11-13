@@ -16,7 +16,7 @@ _Roadmap:_
 
 - PanOS 8.x does not use HTTP Headers to pass API Tokens into the request but
   rather passes the credentials through the URL. If the runtime does not execute
-  successfully, credentials being leaked within CloudWatch Logs. If possible
+  successfully, credentials are leaked within CloudWatch Logs. If possible
   upgrade PanOS to 9.x or later.
 - F5 14.x has an /etc/hosts.allow configuration which blocks
   SSH traffic if you have it enabled. You will need to add the IP Ranges from

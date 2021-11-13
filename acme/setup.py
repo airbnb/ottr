@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name='ottr-airbnb',
     packages=['acme'],
-    version='0.0.2',
+    version='0.0.3',
     author="Kenneth Yang",
     author_email="kenneth.yang@airbnb.com",
     description='Ottr ACME Client Python Wrapper',

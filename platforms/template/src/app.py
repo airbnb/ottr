@@ -41,7 +41,10 @@ def main():
     # Let's Encrypt Client/Initialization
     # [3] Host Must Have DNS Mapping to Subdelegate Zone [Example: dns/platform.tf]
     le_client = acme.LetsEncrypt(
-        hostname=hostname, subdelegate=dns, subject_alternative_names=subject_alternative_names,
+        hostname=hostname,
+        common_name=common_name,
+        subdelegate=dns,
+        subject_alternative_names=subject_alternative_names,
         region=region_name)
 
     # [4] Generate Public/Private Key Pair and CSR
@@ -71,7 +74,7 @@ def main():
     # [7] Apply Changes to Management Console (Set Wait Period for Certificate to Propagate)
 
     # [8] Pull Certificate and Update DynamoDB Table
-    expiration = acme.query_certificate_expiration(hostname)
+    expiration = acme.query_certificate_expiration(hostname, common_name)
     acme.update_certificate_expiration(hostname, expiration)
 
 
