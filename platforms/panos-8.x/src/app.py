@@ -204,7 +204,11 @@ def main():
         hostname)
 
     le_client = acme.LetsEncrypt(
-        hostname=hostname, subdelegate=dns, subject_alternative_names=subject_alternative_names, region=region_name)
+        hostname=hostname,
+        common_name=common_name,
+        subdelegate=dns,
+        subject_alternative_names=subject_alternative_names,
+        region=region_name)
 
     api_token = paloalto_keygen(hostname, username, password)
 
@@ -226,7 +230,7 @@ def main():
     delete_certificates(hostname, api_token, certificates)
     commit_changes(username, hostname, api_token)
 
-    expiration = acme.query_certificate_expiration(hostname)
+    expiration = acme.query_certificate_expiration(hostname, common_name)
     acme.update_certificate_expiration(hostname, expiration)
 
 

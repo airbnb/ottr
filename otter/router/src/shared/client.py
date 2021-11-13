@@ -191,7 +191,7 @@ def get_valid_devices(assets: dict, hosts: List) -> List:
     rotate_assets = []
 
     for host in data:
-        if host['system_name'] in hosts:
+        if host['common_name'] in hosts:
             if host['certificate_expiration'] == 'None':
                 rotate_assets.append(host)
             else:

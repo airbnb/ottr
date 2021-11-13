@@ -31,17 +31,17 @@ LOGGER = get_logger(__name__)
 
 
 class LetsEncrypt:
-    def __init__(self, hostname: str, subdelegate: str, subject_alternative_names: List[str], region: str) -> None:
+    def __init__(self, hostname: str, common_name: str, subdelegate: str, subject_alternative_names: List[str], region: str) -> None:
         self.subdelegate = subdelegate
         self.region = region
         self.hostname = self._validate_device_connection(hostname)
-        self.subdomain = self._get_subdomain(hostname)
+        self.challenge_alias_subdomain = self._get_subdomain(common_name)
         self.subject_alternative_names = self._validate_subdelegate_zone(
             subject_alternative_names)
 
-    def _get_subdomain(self, hostname: str) -> str:
+    def _get_subdomain(self, common_name: str) -> str:
         return tldextract.extract(
-            self.hostname).subdomain
+            common_name).subdomain
 
     def _query_acme_challenge_records(self, hostname: str, hosted_zone_id: str) -> bool:
         client = boto3.client('route53')
@@ -119,16 +119,16 @@ class LetsEncrypt:
         subprocess.call(
             '{directory}/acme.sh/acme.sh --upgrade -b dev'.format(directory=os.getenv('HOME')), shell=True)
         subprocess.call('{directory}/acme.sh/acme.sh --set-default-ca --test --signcsr --csr {csr} --dns dns_aws --challenge-alias {domain_validation} --preferred-chain "Fake LE Root X2" --force'.format(
-            directory=os.getenv('HOME'), csr=f'{csr}', domain_validation=f'{self.subdomain}.{self.subdelegate}'), shell=True)
+            directory=os.getenv('HOME'), csr=f'{csr}', domain_validation=f'{self.challenge_alias_subdomain}.{self.subdelegate}'), shell=True)
 
     def acme_production(self, csr: str) -> None:  # pragma: no cover
         subprocess.call(
             '{directory}/acme.sh/acme.sh --upgrade'.format(directory=os.getenv('HOME')), shell=True)
         subprocess.call('{directory}/acme.sh/acme.sh --set-default-ca --server letsencrypt --preferred-chain "ISRG" --signcsr --csr {csr} --dns dns_aws --challenge-alias {domain_validation} --force'.format(
-            directory=os.getenv('HOME'), csr=f'{csr}', domain_validation=f'{self.subdomain}.{self.subdelegate}'), shell=True)
+            directory=os.getenv('HOME'), csr=f'{csr}', domain_validation=f'{self.challenge_alias_subdomain}.{self.subdelegate}'), shell=True)
 
     def acme_local(self, csr: str) -> None:  # pragma: no cover
         subprocess.call(
             '{directory}/.acme.sh/acme.sh --upgrade -b dev'.format(directory=os.getenv('HOME')), shell=True)
         subprocess.call('{directory}/.acme.sh/acme.sh --set-default-ca --test --signcsr --csr {csr} --dns dns_aws --challenge-alias {domain_validation} --preferred-chain "Fake LE Root X2" --force'.format(
-            directory=os.getenv('HOME'), csr=f'{csr}', domain_validation=f'{self.subdomain}.{self.subdelegate}'), shell=True)
+            directory=os.getenv('HOME'), csr=f'{csr}', domain_validation=f'{self.challenge_alias_subdomain}.{self.subdelegate}'), shell=True)

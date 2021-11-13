@@ -88,6 +88,11 @@ terraform init
 terraform apply
 ```
 
+After the infrastructure is built, the value set in `acme_subdelegate_zone` will
+create a Route53 Hosted Zone which will be used for DNS Subdelegation. You will
+need to either own or purcahse that domain and use Route53 as the DNS service
+for the domain in use: [`Configuring Route53 as a DNS Service`](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/migrate-dns-domain-in-use.html#migrate-dns-change-name-servers-with-provider)
+
 ## Configure Ottr
 
 When Ottr executes an ECS task, that in turn starts up a container that has the
