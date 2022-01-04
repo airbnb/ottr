@@ -28,6 +28,7 @@
 | subnet_cidr_block     | False    | List[string] | IP CIDR Blocks for Subnets AZ1 and AZ2              |               | ["10.0.1.0/24", "10.0.2.0/24"]                  |
 | subnet_az1            | False    | string       | Subnet ID for Primary Availability Zone             |               | "subnet-0123456a"                               |
 | subnet_az2            | False    | string       | Subnet ID for Secondary Availability Zone           |               | "subnet-0123456b"                               |
+| private_subnet        | False    | bool         | subnet_az1/az2 Runs in Private Subnet               |               | true                                            |
 | vpc_id                | False    | string       | VPC ID                                              |               | "vpc-12345678"                                  |
 | country               | False    | string       | Certificate Signing Request: Country (C)            |               | "US"                                            |
 | state                 | False    | string       | Certificate Signing Request: State (ST)             |               | "CA"                                            |

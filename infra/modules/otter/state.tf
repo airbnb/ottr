@@ -96,7 +96,7 @@ resource "aws_sfn_state_machine" "otter" {
 										"${var.subnet_az1}",
 										"${var.subnet_az2}"
 									],
-									"AssignPublicIp": "DISABLED"
+									"AssignPublicIp": "${var.private_subnet ? "DISABLED" : "ENABLED"}"
 								}
 							}
 						},
