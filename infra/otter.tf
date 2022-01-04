@@ -5,6 +5,7 @@ module "otter" {
   subnet_cidr_block     = ["10.0.0.0/28", "10.0.0.16/28"]
   subnet_az1            = "subnet-xxxxxxxx"
   subnet_az2            = "subnet-yyyyyyyy"
+  private_subnet        = false
   vpc_id                = "vpc-xxxxxxxx"
   region                = "us-east-21"
   cloudwatch_schedule   = "rate(12 hours)"

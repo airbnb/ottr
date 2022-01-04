@@ -19,6 +19,9 @@ variable "subnet_az2" {
   type = string
 }
 
+variable "private_subnet" {
+  type = bool
+}
 variable "hosted_zone_ids" {
   description = "List of Route53 DNS Hosted Zone IDs that your organization owns that will be used to validate domain during the certificate rotation process."
   type        = list(string)

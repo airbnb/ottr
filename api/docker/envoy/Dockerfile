@@ -1,5 +1,4 @@
-FROM envoyproxy/envoy-dev:latest
-
+FROM envoyproxy/envoy:v1.19.1
 RUN apt-get update && apt-get -q install -y \
     curl
 
